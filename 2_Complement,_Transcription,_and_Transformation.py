@@ -16,9 +16,22 @@ TGAATGCTGATCCCCTGTGTGGGAGAAAAGAACTGAAGAAGCAGAAACCTCCATGCTCTGACAGTCCTAG
 raw_FASTA = st.text_area("", value=default_FASTA, height = 300)
 
 def clean_FASTA(raw_FASTA: str):
-    lines = raw_FASTA.strip().splitlines()
+    lines = raw_FASTA.strip().upper().splitlines()
     cleaned_lines: list[str] = []
     
-    for line: str in lines[1:]:
-        line = lines.strip()
-        
+    for line in lines[1:]:
+        line = line.strip()
+        if line:
+            cleaned_lines.append(line)
+    
+    cleanedFASTA: str = "".join(cleaned_lines)
+    return cleanedFASTA
+            
+    
+complement_map: dict[str, str] = {
+    "A" : "T",
+    "T" : "A",
+    "C" : "G",
+    "G" : "C"
+    }
+
