@@ -15,7 +15,7 @@ TGAATGCTGATCCCCTGTGTGGGAGAAAAGAACTGAAGAAGCAGAAACCTCCATGCTCTGACAGTCCTAG
 """
 raw_FASTA = st.text_area("", value=default_FASTA, height = 300)
 
-def clean_FASTA(raw_FASTA: str):
+def clean_FASTA(raw_FASTA: str) -> str:
     lines = raw_FASTA.strip().upper().splitlines()
     cleaned_lines: list[str] = []
     
@@ -24,14 +24,35 @@ def clean_FASTA(raw_FASTA: str):
         if line:
             cleaned_lines.append(line)
     
-    cleanedFASTA: str = "".join(cleaned_lines)
-    return cleanedFASTA
+    cleaned_FASTA: str = "".join(cleaned_lines)
+    return cleaned_FASTA
             
-    
-complement_map: dict[str, str] = {
+nucleotides = clean_FASTA(raw_FASTA).strip()
+
+def complement(nucleotides: str) -> str:
+    complement_map: dict[str, str] = {
     "A" : "T",
     "T" : "A",
     "C" : "G",
     "G" : "C"
     }
+    complement_sequence = ""
+    for nucleotide in nucleotides:
+            if nucleotide in complement_map:
+                complement_sequence += complement_map[nucleotide]
+            else:
+                complement_sequence += "N"
+    
+    return complement_sequence
+
+def reverse_complement(nucleotides: str) -> str:
+    return complement(nucleotides)[::-1]
+
+def transcribe_RNA(nucleotides: str) -> str:
+    return nucleotides.replace("T", "U")
+
+option = st.radio(
+    "How do you want to process this sequence?",
+    ["Complement", "Reverse Complement", "Transcribe to RNA", "Translate to Amino Acids"]
+)
 
