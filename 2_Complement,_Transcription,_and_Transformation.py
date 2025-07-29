@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import altair as alt
 
 st.title("Complement, Transcription, and Transformation")
 st.markdown("""
@@ -51,8 +49,45 @@ def reverse_complement(nucleotides: str) -> str:
 def transcribe_RNA(nucleotides: str) -> str:
     return nucleotides.replace("T", "U")
 
+def translate_amino_acids(nucleotides: str) -> str:
+    amino_acid_map: dict[str, str] = {
+        'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
+        'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
+        'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
+        'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',                 
+        'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L',
+        'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P',
+        'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q',
+        'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
+        'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V',
+        'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
+        'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E',
+        'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
+        'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
+        'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
+        'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
+        'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',   
+    }
+    amino_acids = ""
+    codons = [nucleotides[n:n+3] for n in range(0, len(nucleotides), 3)]
+    for codon in codons:
+        if len(codon) != 3:
+            continue
+        amino_acids += amino_acid_map.get(codon, "-")
+            
+    return amino_acids
+
 option = st.radio(
     "How do you want to process this sequence?",
     ["Complement", "Reverse Complement", "Transcribe to RNA", "Translate to Amino Acids"]
 )
 
+if nucleotides:
+    if option == "Complement":
+        st.write("Complement:", complement(nucleotides))
+    elif option == "Reverse Complement":
+        st.write("Reverse Complement:", reverse_complement(nucleotides))
+    elif option == "Transcribe to RNA":
+        st.write("RNA:", transcribe_RNA(nucleotides))
+    elif option == "Translate to Amino Acids":
+        st.write("Amino Acids:", translate_amino_acids(nucleotides))
